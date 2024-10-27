@@ -18,12 +18,20 @@ describe("Confidential ERC20 tests", function () {
     this.instances = await createInstances(this.signers);
   });
 
-  it("should mint to alice", async function () {
+  it("should not transfer tokens between two users", async function () {
     const transaction = await this.erc20.mint(1000);
-
     await transaction.wait();
 
-    //Reencrypt Alice's balance
+    const input = this.instances.alice.createEncryptedInput(this.contractAddress, this.signers.alice.address);
+    input.add64(1337);
+    const encryptedTransferAmount = input.encrypt();
+    const tx = await this.erc20["transfer(address,bytes32,bytes)"](
+      this.signers.bob.address,
+      encryptedTransferAmount.handles[0],
+      encryptedTransferAmount.inputProof,
+    );
+    await tx.wait();
+
     const balanceHandleAlice = await this.erc20.balanceOf(this.signers.alice.address);
     const { publicKey: publicKeyAlice, privateKey: privateKeyAlice } = this.instances.alice.generateKeypair();
     const eip712 = this.instances.alice.createEIP712(publicKeyAlice, this.contractAddress);
@@ -40,10 +48,29 @@ describe("Confidential ERC20 tests", function () {
       this.contractAddress,
       this.signers.alice.address,
     );
+
     expect(balanceAlice).to.equal(1000);
 
-    const totalSupply = await this.erc20._totalSupply();
-    expect(totalSupply).to.equal(1000);
+    // Reencrypt Bob's balance
+    const balanceHandleBob = await this.erc20.balanceOf(this.signers.bob.address);
+
+    const { publicKey: publicKeyBob, privateKey: privateKeyBob } = this.instances.bob.generateKeypair();
+    const eip712Bob = this.instances.bob.createEIP712(publicKeyBob, this.contractAddress);
+    const signatureBob = await this.signers.bob.signTypedData(
+      eip712Bob.domain,
+      { Reencrypt: eip712Bob.types.Reencrypt },
+      eip712Bob.message,
+    );
+    const balanceBob = await this.instances.bob.reencrypt(
+      balanceHandleBob,
+      privateKeyBob,
+      publicKeyBob,
+      signatureBob.replace("0x", ""),
+      this.contractAddress,
+      this.signers.bob.address,
+    );
+
+    expect(balanceBob).to.equal(0);
   });
 
   it("should transfer tokens between two users", async function () {
@@ -119,6 +146,35 @@ describe("Confidential ERC20 tests", function () {
     }
   });
 
+
+  it("should mint to alice", async function () {
+    const transaction = await this.erc20.mint(1000);
+
+    await transaction.wait();
+
+    //Reencrypt Alice's balance
+    const balanceHandleAlice = await this.erc20.balanceOf(this.signers.alice.address);
+    const { publicKey: publicKeyAlice, privateKey: privateKeyAlice } = this.instances.alice.generateKeypair();
+    const eip712 = this.instances.alice.createEIP712(publicKeyAlice, this.contractAddress);
+    const signatureAlice = await this.signers.alice.signTypedData(
+      eip712.domain,
+      { Reencrypt: eip712.types.Reencrypt },
+      eip712.message,
+    );
+    const balanceAlice = await this.instances.alice.reencrypt(
+      balanceHandleAlice,
+      privateKeyAlice,
+      publicKeyAlice,
+      signatureAlice.replace("0x", ""),
+      this.contractAddress,
+      this.signers.alice.address,
+    );
+    expect(balanceAlice).to.equal(1000);
+
+    const totalSupply = await this.erc20._totalSupply();
+    expect(totalSupply).to.equal(1000);
+  });
+
   it("should mint tokens to Alice and decrypt her balance successfully", async function () {
     const transaction = await this.erc20.mint(1000);
 
@@ -151,58 +207,4 @@ describe("Confidential ERC20 tests", function () {
     await awaitAllDecryptionResults();
   });
 
-  it("should not transfer tokens between two users", async function () {
-    const transaction = await this.erc20.mint(this.signers.alice, 1000);
-    await transaction.wait();
-
-    const input = this.instances.alice.createEncryptedInput(this.contractAddress, this.signers.alice.address);
-    input.add64(1337);
-    const encryptedTransferAmount = input.encrypt();
-    const tx = await this.erc20["transfer(address,bytes32,bytes)"](
-      this.signers.bob.address,
-      encryptedTransferAmount.handles[0],
-      encryptedTransferAmount.inputProof,
-    );
-    await tx.wait();
-
-    const balanceHandleAlice = await this.erc20.balanceOf(this.signers.alice.address);
-    const { publicKey: publicKeyAlice, privateKey: privateKeyAlice } = this.instances.alice.generateKeypair();
-    const eip712 = this.instances.alice.createEIP712(publicKeyAlice, this.contractAddress);
-    const signatureAlice = await this.signers.alice.signTypedData(
-      eip712.domain,
-      { Reencrypt: eip712.types.Reencrypt },
-      eip712.message,
-    );
-    const balanceAlice = await this.instances.alice.reencrypt(
-      balanceHandleAlice,
-      privateKeyAlice,
-      publicKeyAlice,
-      signatureAlice.replace("0x", ""),
-      this.contractAddress,
-      this.signers.alice.address,
-    );
-
-    expect(balanceAlice).to.equal(1000);
-
-    // Reencrypt Bob's balance
-    const balanceHandleBob = await this.erc20.balanceOf(this.signers.bob.address);
-
-    const { publicKey: publicKeyBob, privateKey: privateKeyBob } = this.instances.bob.generateKeypair();
-    const eip712Bob = this.instances.bob.createEIP712(publicKeyBob, this.contractAddress);
-    const signatureBob = await this.signers.bob.signTypedData(
-      eip712Bob.domain,
-      { Reencrypt: eip712Bob.types.Reencrypt },
-      eip712Bob.message,
-    );
-    const balanceBob = await this.instances.bob.reencrypt(
-      balanceHandleBob,
-      privateKeyBob,
-      publicKeyBob,
-      signatureBob.replace("0x", ""),
-      this.contractAddress,
-      this.signers.bob.address,
-    );
-
-    expect(balanceBob).to.equal(0);
-  });
 });
