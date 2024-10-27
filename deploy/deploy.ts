@@ -5,9 +5,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
 
-  const name = "ConfidentialToken";
-  const symbol = "CFT";
-
   const deployed = await deploy("EncryptedERC20", {
     from: deployer,
     log: true,
