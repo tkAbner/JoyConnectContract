@@ -99,6 +99,15 @@ pnpm test:rivest
 
 Install [Docker](https://docs.docker.com/engine/install/).
 
+Start fhEVM
+During installation (see previous section) we recommend you for easier setup to not change the default .env : simply copy the original .env.example file to a new .env file in the root of the repo.
+
+Then, start a local fhEVM docker compose that inlcudes everything needed to deploy FHE encrypted smart contracts using:
+
+```sh
+pnpm fhevm:start
+```
+
 The initial setup takes 2–3 minutes. Wait until blockchain logs appear to confirm completion.
 
 Run tests in a new terminal:
