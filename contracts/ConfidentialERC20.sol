@@ -6,7 +6,7 @@ import "fhevm/lib/TFHE.sol";
 import "@openzeppelin/contracts/access/Ownable2Step.sol";
 import "fhevm/gateway/GatewayCaller.sol";
 
-contract EncryptedERC20 is Ownable2Step, GatewayCaller {
+contract ConfidentialERC20 is Ownable2Step, GatewayCaller {
     // Events for Transfer, Approval, Mint, and Decryption
     event Transfer(address indexed from, address indexed to);
     event Approval(address indexed owner, address indexed spender);
