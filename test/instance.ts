@@ -55,7 +55,7 @@ export const createInstance = async () => {
   return await createFhevmInstance({
     networkUrl: config.url,
     gatewayUrl: config.gatewayUrl,
-    aclAddress: "0x2Fb4341027eb1d2aD8B5D9708187df8633cAFA92"
+    aclAddress: "0x2Fb4341027eb1d2aD8B5D9708187df8633cAFA92",
   });
 };
 
