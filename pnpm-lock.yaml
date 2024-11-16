@@ -31,7 +31,7 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0(geae4jvdfg2eknoy6ku3h4qpgy)
       '@nomicfoundation/hardhat-verify':
-        specifier: ^1.0.0
+        specifier: ^1.1.1
         version: 1.1.1(hardhat@2.22.8(ts-node@10.9.2(@types/node@18.19.44)(typescript@5.5.4))(typescript@5.5.4))
       '@openzeppelin/contracts':
         specifier: ^5.0.2
@@ -88,8 +88,8 @@ importers:
         specifier: ^6.8.0
         version: 6.13.2
       fhevm:
-        specifier: ^0.5.8
-        version: 0.5.9
+        specifier: ^0.5.4
+        version: 0.5.4
       fhevmjs:
         specifier: ^0.5.7
         version: 0.5.7(encoding@0.1.13)
@@ -1474,8 +1474,8 @@ packages:
   fastq@1.17.1:
     resolution: {integrity: sha512-sRVD3lWVIXWg6By68ZN7vho9a1pQcN/WBFaAAsDDFzlJjvoGx0P8z7V1t72grFJfJhu3YPZBuu25f7Kaw2jN1w==}
 
-  fhevm@0.5.9:
-    resolution: {integrity: sha512-9cSfmAa4AJUuROd4kESvtNYJpnea1PUvjU7yaNnrJsaHqPkVGQvpnIDEnO4KTsJ36Etup1ksPs8PvyGNYwkatQ==}
+  fhevm@0.5.4:
+    resolution: {integrity: sha512-N6q6SBzLkBcBKjnX825wv1cWZBnRI+JDT1l87eBH3pw2o9B8t6M1LmNbXcJG2hiKWChsnzxTHQi21NZln0AHrg==}
     engines: {node: '>=20.0.0'}
 
   fhevmjs@0.5.7:
@@ -2682,6 +2682,11 @@ packages:
     resolution: {integrity: sha512-zIqLehBK/g7tvrFmQljrfZXfkEeLt2v6wbe+uFu6kH/qAHZa7ybt8Vc0wYcmjo2U0PeBm15d79ee3AkwbIjFdQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
+    os: [linux]
+
+  solidity-comments-linux-x64-gnu@0.1.1:
+    resolution: {integrity: sha512-oiU4yhh1Q9SeGXQ+/sogfTNoOkU8I8IvlIeotBQziTOonUHrxQk4E63kNiYGPDn5ZbB3BhKFmGHNRNrkufsxcQ==}
+    engines: {node: '>= 10'}
     os: [linux]
 
   solidity-comments-linux-x64-musl@0.0.2:
@@ -4867,9 +4872,10 @@ snapshots:
     dependencies:
       reusify: 1.0.4
 
-  fhevm@0.5.9:
+  fhevm@0.5.4:
     dependencies:
       '@openzeppelin/contracts': 5.0.2
+      solidity-comments-linux-x64-gnu: 0.1.1
 
   fhevmjs@0.5.7(encoding@0.1.13):
     dependencies:
@@ -6235,6 +6241,8 @@ snapshots:
 
   solidity-comments-linux-x64-gnu@0.0.2:
     optional: true
+
+  solidity-comments-linux-x64-gnu@0.1.1: {}
 
   solidity-comments-linux-x64-musl@0.0.2:
     optional: true

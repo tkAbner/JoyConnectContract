@@ -40,7 +40,10 @@ const currentTime = (): string => {
   return now.toLocaleTimeString("en-US", { hour12: true, hour: "numeric", minute: "numeric", second: "numeric" });
 };
 
-const parsedEnv = dotenv.parse(fs.readFileSync("node_modules/fhevm/gateway/.env.gateway"));
+const parsedEnv = {
+  // TODO: change this to the actual address of the Gateway contract
+  GATEWAY_CONTRACT_PREDEPLOY_ADDRESS: '0x096b4679d45fB675d4e2c1E4565009Cec99A12B1'
+}
 const privKeyRelayer = process.env.PRIVATE_KEY_GATEWAY_RELAYER;
 const relayer = new ethers.Wallet(privKeyRelayer!, ethers.provider);
 
