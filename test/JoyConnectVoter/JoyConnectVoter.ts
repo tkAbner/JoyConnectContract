@@ -16,8 +16,8 @@ describe("Voting Contract Tests", function () {
     this.contractAddress = await this.votingContract.getAddress();
   });
 
-  describe("Should be able to vote and re-encrypt the values", function () {
-    it("should be able to vote in favour and re-encrypt the values ", async function () {
+  describe("can vote", function () {
+    it("Vote and reveal", async function () {
       // const votingContract = this.votingContract.connect();
 
       const owner = await this.votingContract.owner();
