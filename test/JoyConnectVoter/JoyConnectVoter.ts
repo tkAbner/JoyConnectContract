@@ -28,19 +28,46 @@ describe("Voting Contract Tests", function () {
 
       const targetAddress = "0x0000000000000000000000000000000000000001"
 
-      const input = this.instances.alice.createEncryptedInput(this.contractAddress, this.signers.alice.address);
-      input.add64(1); // likes, like = 1, dislike = 0
-      const encryptedVotingCount = input.encrypt();
+      const input1 = this.instances.alice.createEncryptedInput(this.contractAddress, this.signers.alice.address);
+      input1.add64(1); // likes, like = 1, dislike = 0
+      const encryptedVotingCount1 = input1.encrypt();
 
-      const voteTx = await this.votingContract.vote(
+      const voteTx1 = await this.votingContract.vote(
         targetAddress,
-        encryptedVotingCount.handles[0],
-        encryptedVotingCount.inputProof,
+        encryptedVotingCount1.handles[0],
+        encryptedVotingCount1.inputProof,
       );
+      await voteTx1.wait();
 
-      const receipt = await voteTx.wait();
+      const input2 = this.instances.bob.createEncryptedInput(this.contractAddress, this.signers.bob.address);
+      input2.add64(1); // likes, like = 1, dislike = 0
+      const encryptedVotingCount2 = input2.encrypt();
+
+      const voteTx2 = await this.votingContract.connect(this.signers.bob).vote(
+        targetAddress,
+        encryptedVotingCount2.handles[0],
+        encryptedVotingCount2.inputProof,
+      );
+      await voteTx2.wait();
+
+      const input3 = this.instances.carol.createEncryptedInput(this.contractAddress, this.signers.carol.address);
+      input3.add64(1); // likes, like = 1, dislike = 0
+      const encryptedVotingCount3 = input3.encrypt();
+
+      const voteTx3 = await this.votingContract.connect(this.signers.carol).vote(
+        targetAddress,
+        encryptedVotingCount3.handles[0],
+        encryptedVotingCount3.inputProof,
+      );
+      await voteTx3.wait();
+
+      return;
+
+
+      
+      
       // expect(hash.status).is.not.null;
-      console.log("hash : ", receipt.transactionHash);
+      // console.log("hash : ", receipt.transactionHash);
 
       const eVote = await this.votingContract.getUserEncryptedVoteCount(targetAddress);
       console.log("eVote : ", eVote);

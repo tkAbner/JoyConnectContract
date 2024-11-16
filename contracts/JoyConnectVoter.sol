@@ -35,11 +35,11 @@ contract JoyConnectVoter is GatewayCaller, Ownable2Step {
 
         // Update or initialize the encrypted vote count for the sender
         if (TFHE.isInitialized(encryptedVoteCounts[targetUser])) {
-            TFHE.allow(encryptedVoteCounts[targetUser], address(this));
-            TFHE.allow(encryptedVoteCounts[targetUser], owner());
             encryptedVoteCounts[targetUser] = TFHE.add(encryptedVoteCounts[targetUser], userLikes);
         } else {
             encryptedVoteCounts[targetUser] = userLikes;
+            TFHE.allow(encryptedVoteCounts[targetUser], address(this));
+            TFHE.allow(encryptedVoteCounts[targetUser], owner());
         }
 
         // Add the computed vote powers to the encrypted tallies
