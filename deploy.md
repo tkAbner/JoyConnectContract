@@ -2,7 +2,8 @@
 
 ## JoyConnectVoter Deploy Address
 
-JoyConnectVoter: 0xc3da5966912671c8A27FbA240d16a5c082eB0c4d
+JoyConnectVoter:
+[0x689d679177D9407edE26178Fdba3D4451BF0A649](https://explorer.rivest.inco.org/address/0x689d679177D9407edE26178Fdba3D4451BF0A649)
 
 ## IncoRivest Hyperlane Deploy Address
 
