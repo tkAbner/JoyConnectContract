@@ -16,7 +16,9 @@ contract JoyConnectVoter is GatewayCaller, Ownable2Step {
 
     uint64 public totalVoteCount;
 
-    constructor() Ownable(msg.sender) {}
+    constructor() Ownable(msg.sender) {
+        euint64 a = TFHE.asEuint64(0);
+    }
 
     function init() external onlyOwner {
         totalVoteCountEncrypted = TFHE.asEuint64(0);
@@ -88,17 +90,17 @@ contract JoyConnectVoter is GatewayCaller, Ownable2Step {
      */
     function revealVotingResultForUser(address targetUser) public onlyOwner {
         // Retrieve encrypted tallies
-        // eaddress eUser = TFHE.asEaddress(targetUser);
+        eaddress eUser = TFHE.asEaddress(targetUser);
         euint64 eCount = encryptedVoteCounts[targetUser];
 
         // Grant the contract permission to handle encrypted tallies
-        // TFHE.allow(eUser, address(this));
+        TFHE.allow(eUser, address(this));
         TFHE.allow(eCount, address(this));
 
         // Request decryption of the final vote tallies
         uint256[] memory cts = new uint256[](0);
-        // cts[0] = Gateway.toUint256(eUser);
-        cts[0] = Gateway.toUint256(eCount);
+        cts[0] = Gateway.toUint256(eUser);
+        cts[1] = Gateway.toUint256(eCount);
 
         Gateway.requestDecryption(cts, this.decryptionUserVotingCallback.selector, 0, block.timestamp + 100, false);
     }
